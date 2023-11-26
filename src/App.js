@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+// import { CookiesProvider } from "react-cookie";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./scss/style.scss";
+
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+);
+
+// Pages
+const Login = React.lazy(() => import("./views/pages/login/Login"));
+const Register = React.lazy(() => import("./views/pages/register/Register"));
+
+// Containers
+const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"));
+class App extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <Suspense fallback={loading}>
+          <Routes>
+            <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route
+              exact
+              path="/register"
+              name="Register Page"
+              element={<Register />}
+            />
+            <Route path="/" name="Home" element={<DefaultLayout />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
