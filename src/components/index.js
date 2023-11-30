@@ -2,7 +2,7 @@ import AppSidebar from "./AppSidebar";
 import AppBreadcrumb from "./AppBreadcrumb";
 import AppHeader from "./AppHeader";
 import AppHeaderDropdown from "./header/AppHeaderDropdown";
-// import AppContent from "./AppContent";
+import AppContent from "./AppContent";
 // import AppFooter from "./AppFooter";
 // import DocsCallout from "./DocsCallout";
 // import DocsLink from "./DocsLink";
@@ -13,7 +13,7 @@ export {
   AppBreadcrumb,
   AppHeader,
   AppHeaderDropdown,
-  // AppContent,
+  AppContent,
   // AppFooter,
   // DocsCallout,
   // DocsLink,

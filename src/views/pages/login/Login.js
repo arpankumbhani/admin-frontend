@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -19,6 +21,17 @@ import { cilLockLocked, cilUser } from "@coreui/icons";
 import axios from "axios";
 
 const Login = () => {
+  useEffect(() => {
+    const registrationSuccess = localStorage.getItem("registrationSuccess");
+
+    if (registrationSuccess) {
+      toast.success("Registration successful", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      localStorage.removeItem("registrationSuccess");
+    }
+  }, []);
   useEffect(() => {
     window.addEventListener("popstate", (e) => {
       window.history.go(0);
@@ -46,11 +59,14 @@ const Login = () => {
     })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-
+        localStorage.setItem("LoginSuccess", "true");
         navigate("/");
       })
       .catch((error) => {
-        alert("Service error:");
+        toast.error("Please Enter valid data", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
         console.log(error);
       });
     // console.log(result);
@@ -145,6 +161,7 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer />
     </div>
   );
 };

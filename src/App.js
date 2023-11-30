@@ -29,7 +29,7 @@ class App extends Component {
               name="Register Page"
               element={<Register />}
             />
-            <Route path="/" name="Home" element={<DefaultLayout />} />
+            <Route path="*" name="Home" element={<DefaultLayout />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

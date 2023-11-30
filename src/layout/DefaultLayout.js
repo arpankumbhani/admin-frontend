@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { AppSidebar, AppHeader } from "../components/index";
+import { AppSidebar, AppHeader, AppContent } from "../components/index";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DefaultLayout = () => {
   const navigate = useNavigate();
@@ -13,6 +15,13 @@ const DefaultLayout = () => {
       navigate("/login");
     } else {
       navigate("/");
+      if (localStorage.getItem("LoginSuccess")) {
+        toast.success("Login successful", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        localStorage.removeItem("LoginSuccess");
+      }
     }
   }, [localStorage]);
 
@@ -21,11 +30,12 @@ const DefaultLayout = () => {
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        {/* <div className="body flex-grow-1 px-3">
+        <div className="body flex-grow-1 px-3">
           <AppContent />
         </div>
-        <AppFooter /> */}
+        {/* <AppFooter /> */}
       </div>
+      <ToastContainer />
     </div>
   );
 };
