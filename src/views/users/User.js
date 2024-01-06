@@ -52,7 +52,8 @@ const UserTable = () => {
     });
   };
 
-  console.log();
+  // console.log();
+
   const handleInputChange = (e, key) => {
     setEditedData({
       ...editedData,

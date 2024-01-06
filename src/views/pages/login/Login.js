@@ -32,6 +32,7 @@ const Login = () => {
       localStorage.removeItem("registrationSuccess");
     }
   }, []);
+
   useEffect(() => {
     window.addEventListener("popstate", (e) => {
       window.history.go(0);
@@ -49,31 +50,75 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const getAuth = useCallback(async (dataa) => {
-    const result = await axios(`${process.env.REACT_APP_API_URL}auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: dataa,
-    })
-      .then((res) => {
-        localStorage.setItem("token", res.data.token);
+  const getAuth = useCallback(
+    async (dataa) => {
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}auth/login`,
+          dataa,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const { token } = res.data;
+
+        // Set the token in local storage
+        localStorage.setItem("token", token);
         localStorage.setItem("LoginSuccess", "true");
         navigate("/");
-      })
-      .catch((error) => {
+
+        // Set a timer to remove the token after 1 hour (3600 seconds)
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("LoginSuccess");
+          // You might want to redirect the user to the login page or take some other action
+          navigate("/login");
+        }, 5 * 60 * 60 * 1000); // 1 hour in milliseconds
+      } catch (error) {
         toast.error("Please Enter valid data", {
           position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
+          autoClose: 1000,
         });
         console.log(error);
-      });
-    // console.log(result);
+      }
+    },
+    [navigate]
+  );
 
-    if (result?.data && result?.data.token) {
-    }
-  }, []);
+  // const getAuth = useCallback(async (dataa) => {
+  //   const result = await axios(`${process.env.REACT_APP_API_URL}auth/login`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     data: dataa,
+  //   })
+  //     .then((res) => {
+  //       localStorage.setItem("token", res.data.token);
+  //       localStorage.setItem("LoginSuccess", "true");
+  //       navigate("/");
+  //       setTimeout(() => {
+  //         localStorage.removeItem("token");
+  //         localStorage.removeItem("LoginSuccess");
+  //         // You might want to redirect the user to the login page or take some other action
+  //         navigate("/login");
+  //       }, 3600000); // 1 hour in milliseconds
+  //     })
+  //     .catch((error) => {
+  //       toast.error("Please Enter valid data", {
+  //         position: toast.POSITION.TOP_CENTER,
+  //         autoClose: 3000,
+  //       });
+  //       console.log(error);
+  //     });
+  //   // console.log(result);
+
+  //   if (result?.data && result?.data.token) {
+  //   }
+  // }, []);
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -123,11 +168,11 @@ const Login = () => {
                           Login
                         </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
+                      {/* <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
                           Forgot password?
                         </CButton>
-                      </CCol>
+                      </CCol> */}
                     </CRow>
                   </CForm>
                 </CCardBody>

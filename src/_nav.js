@@ -1,6 +1,14 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { cilPeople, cilSpeedometer } from "@coreui/icons";
+import {
+  cilCart,
+  cilContact,
+  cilMoney,
+  cilPeople,
+  cilSave,
+  cilSpeedometer,
+  cilWallet,
+} from "@coreui/icons";
 import { CNavItem } from "@coreui/react";
 
 const _nav = [
@@ -20,6 +28,51 @@ const _nav = [
     name: "User",
     to: "/users",
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Finance",
+    to: "/accountList",
+    icon: <CIcon icon={cilWallet} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Client",
+    to: "/clientList",
+    icon: <CIcon icon={cilContact} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Income",
+    to: "/incomeList",
+    icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Expense",
+    to: "/expenseData",
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Report",
+    to: "/reportData",
+    icon: <CIcon icon={cilSave} customClassName="nav-icon" />,
     badge: {
       color: "info",
     },

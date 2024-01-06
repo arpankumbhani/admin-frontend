@@ -14,7 +14,7 @@ const DefaultLayout = () => {
       });
       navigate("/login");
     } else {
-      navigate("/");
+      // navigate("/");
       if (localStorage.getItem("LoginSuccess")) {
         toast.success("Login successful", {
           position: toast.POSITION.TOP_CENTER,

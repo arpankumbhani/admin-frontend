@@ -1,0 +1,28 @@
+.form-style {
+  /* border: 1px solid; */
+  border-style: outset;
+  margin: 15px 20px;
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(6px);
+  background-color: #c8ced563;
+}
+
+.popup-form-style {
+  background-color: #c8ced563;
+}
+.input-bgColor {
+  background-color: #ffffffdb;
+}
+
+.report-style {
+  border-style: outset;
+  margin: 40px 140px;
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(6px);
+  background-color: #f6f6f6c8;
+}
+.totalAmount {
+  float: right;
+}
