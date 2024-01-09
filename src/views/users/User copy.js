@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { saveAs } from "file-saver";
-
 // import axios from "axios";
 
 const UserTable = () => {
@@ -165,101 +163,11 @@ const UserTable = () => {
     }
   }, []);
 
-  const handleSelectAll = () => {
-    if (userData && userData.user && userData.user.length > 0) {
-      if (selectedRows.length === userData.user.length) {
-        // If all rows are currently selected, unselect all
-        setSelectedRows([]);
-      } else {
-        // Otherwise, select all rows
-        setSelectedRows(userData.user.map((user) => user._id));
-      }
-    }
-  };
-
-  // State to keep track of selected rows
-  const [selectedRows, setSelectedRows] = useState([]);
-
-  // Toggle checkbox selection for a row
-  const toggleRowSelection = (AccountId) => {
-    if (selectedRows.includes(AccountId)) {
-      setSelectedRows((prevSelectedRows) =>
-        prevSelectedRows.filter((id) => id !== AccountId)
-      );
-    } else {
-      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, AccountId]);
-    }
-  };
-
-  const convertToCSV = (data) => {
-    // Extract only the first six columns from the header
-    const customHeaders = ["Id", "Username", "Email", "Phone Number", "Role"];
-
-    // Join the custom headers to form the header line
-    const header = customHeaders.join(",");
-    // console.log(header, "Headerrrrrr");
-
-    const rows = data.map((row) => {
-      let roleDetails;
-      if (row.role === "1") {
-        roleDetails = `"Admin"`;
-      } else if (row.role === "2") {
-        roleDetails = `"Employee"`;
-      } else {
-        roleDetails = `"HR"`;
-      }
-      const rowData = [
-        row._id,
-        `"${row.username}"`,
-        `"${row.email}"`,
-        `"${row.phone}"`,
-        roleDetails,
-      ];
-      return rowData.join(",");
-    });
-    // console.log(rows, "rowwwwww");
-
-    return `${header}\n${rows.join("\n")}`;
-  };
-
-  // Function to export data as CSV file
-  const exportToCSV = () => {
-    const selectedData = userData.user.filter((user) =>
-      selectedRows.includes(user._id)
-    );
-    const csvData = convertToCSV(selectedData);
-    // console.log(userData.user);
-    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-    saveAs(blob, "account_data.csv");
-    setSelectedRows([]);
-  };
-
   return (
     <div className="table-responsive">
-      <button
-        type="button"
-        className="btn btn-primary mx-3 mb-2"
-        style={{ float: "right", margin: "5px" }}
-        disabled={selectedRows.length === 0}
-        onClick={exportToCSV}
-      >
-        Export to CSV
-      </button>
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                onChange={handleSelectAll}
-                checked={
-                  userData &&
-                  userData.user &&
-                  selectedRows.length === userData.user.length &&
-                  userData.user.length > 0
-                }
-              />
-            </th>
             <th>Username</th>
             <th>Email</th>
             <th>Phone Number</th>
@@ -271,13 +179,6 @@ const UserTable = () => {
           {userData &&
             userData.user?.map((user) => (
               <tr key={user._id}>
-                <td>
-                  <input
-                    type="checkbox"
-                    onChange={() => toggleRowSelection(user._id)}
-                    checked={selectedRows.includes(user._id)}
-                  />
-                </td>
                 <td>
                   {editMode === user._id ? (
                     <input

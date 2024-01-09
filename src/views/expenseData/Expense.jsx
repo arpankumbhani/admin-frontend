@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { CCloseButton } from "@coreui/react";
 import "..//allFormCss/From.css";
+import { saveAs } from "file-saver";
 
 const ExpenseList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -562,6 +563,127 @@ const ExpenseList = () => {
     getData();
   }, [AccountDropDownList, getData]);
 
+  const handleSelectAll = () => {
+    if (listData && listData.user && listData.user.length > 0) {
+      if (selectedRows.length === listData.user.length) {
+        // If all rows are currently selected, unselect all
+        setSelectedRows([]);
+      } else {
+        // Otherwise, select all rows
+        setSelectedRows(listData.user.map((user) => user._id));
+      }
+    }
+  };
+
+  // State to keep track of selected rows
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  // Toggle checkbox selection for a row
+  const toggleRowSelection = (ExpenseId) => {
+    if (selectedRows.includes(ExpenseId)) {
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((id) => id !== ExpenseId)
+      );
+    } else {
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, ExpenseId]);
+    }
+  };
+
+  const convertToCSV = (data) => {
+    // Extract only the first six columns from the header
+    const customHeaders = [
+      "Id",
+      "Expense Name",
+      "Expense Amount",
+      "Payment Date",
+      "Payment Mode",
+      "Cheque details",
+    ];
+
+    // Join the custom headers to form the header line
+    const header = customHeaders.join(",");
+    // console.log(header, "Headerrrrrr");
+
+    const rows = data.map((row) => {
+      let chequeDetailsString = "";
+
+      // Check if paymentMode is Cheque
+      if (row.paymentMode === "Cheque") {
+        chequeDetailsString = `"${JSON.stringify(row.chequeDetails)}"`;
+      }
+
+      const rowData = [
+        row._id,
+        `"${row.expenseName}"`,
+        `"${row.expenseAmount}"`,
+        `"${row.paymentDate.slice(0, 10)}"`,
+        `"${row.paymentMode}"`,
+        chequeDetailsString,
+      ];
+      return rowData.join(",");
+    });
+    // console.log(rows, "rowwwwww");
+
+    return `${header}\n${rows.join("\n")}`;
+  };
+
+  // Function to export data as CSV file
+  const exportToCSV = () => {
+    const selectedData = listData.user.filter((user) =>
+      selectedRows.includes(user._id)
+    );
+    const csvData = convertToCSV(selectedData);
+    console.log(selectedData);
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+    saveAs(blob, "account_data.csv");
+    setSelectedRows([]);
+  };
+
+  // State for sorting
+  const [sortOrder, setSortOrder] = useState("");
+  const [sortColumn, setSortColumn] = useState(""); // Default sorting column
+
+  const handleSort = (column) => {
+    // Toggle between ascending and descending order
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+    setSortColumn(column);
+  };
+  // Function to compare values for sorting
+  const compareValues = (key, order = "asc") => {
+    return function (a, b) {
+      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+        // Property doesn't exist on either object
+        return 0;
+      }
+
+      const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
+      const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
+
+      // Handle numeric comparison
+      const numericComparison = parseFloat(varB) - parseFloat(varA) || 0;
+
+      // If numericComparison is not 0, return it; otherwise, proceed with string comparison
+      if (numericComparison !== 0) {
+        return order === "asc" ? numericComparison : numericComparison * -1;
+      }
+
+      let comparison = 0;
+      if (varA > varB) {
+        comparison = 1;
+      } else if (varA < varB) {
+        comparison = -1;
+      }
+
+      return order === "desc" ? comparison * -1 : comparison;
+    };
+  };
+
+  // Sort the data based on the current sorting column and order
+  const sortedData = Array.isArray(listData.user)
+    ? [...listData.user].sort(compareValues(sortColumn, sortOrder))
+    : [];
+
   return (
     <>
       <div>
@@ -569,49 +691,109 @@ const ExpenseList = () => {
           <div className="table-responsive">
             <div className="text-right mb-2">
               <button
-                className="btn btn-primary end-1"
+                className="btn btn-primary"
                 style={{ float: "right", margin: "5px" }}
                 onClick={openModal}
               >
                 +
               </button>
+              <button
+                className="btn btn-primary mx-3"
+                style={{ float: "right", margin: "5px" }}
+                type="button"
+                onClick={exportToCSV}
+                disabled={selectedRows.length === 0}
+              >
+                Export to CSV
+              </button>
             </div>
             <table className="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th>Expense Name</th>
-                  <th>Expense Amount</th>
-                  <th>Payment Date</th>
-                  <th>Payment Mode</th>
+                  <th>
+                    <input
+                      type="checkbox"
+                      onChange={handleSelectAll}
+                      checked={
+                        listData &&
+                        listData.user &&
+                        selectedRows.length === listData.user.length &&
+                        listData.user.length > 0
+                      }
+                    />
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("expenseName")}
+                  >
+                    Expense Name
+                    {sortColumn === "expenseName" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("expenseAmount")}
+                  >
+                    Expense Amount
+                    {sortColumn === "expenseAmount" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("paymentDate")}
+                  >
+                    Payment Date
+                    {sortColumn === "paymentDate" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("paymentMode")}
+                  >
+                    Payment Mode
+                    {sortColumn === "paymentMode" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {listData &&
-                  listData.user?.map((user) => (
-                    <tr key={user._id}>
-                      <td>{user.expenseName}</td>
-                      <td>{user.expenseAmount}</td>
-                      <td>{user.paymentDate.slice(0, 10)}</td>
-                      <td>{user.paymentMode}</td>
-                      <td>
-                        <>
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => handleEdit(user._id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="ms-3 btn btn-danger"
-                            onClick={() => handleDelete(user._id)}
-                          >
-                            Delete
-                          </button>
-                        </>
-                      </td>
-                    </tr>
-                  ))}
+                {sortedData.map((user) => (
+                  <tr key={user._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        onChange={() => toggleRowSelection(user._id)}
+                        checked={selectedRows.includes(user._id)}
+                      />
+                    </td>
+                    <td>{user.expenseName}</td>
+                    <td>{user.expenseAmount}</td>
+                    <td>{user.paymentDate.slice(0, 10)}</td>
+                    <td>{user.paymentMode}</td>
+                    <td>
+                      <>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleEdit(user._id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="ms-3 btn btn-danger"
+                          onClick={() => handleDelete(user._id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -711,7 +893,7 @@ const ExpenseList = () => {
                                 handleInputChange({
                                   target: {
                                     name: "paymentMode",
-                                    value: "  ",
+                                    value: "Cheque",
                                   },
                                 })
                               }

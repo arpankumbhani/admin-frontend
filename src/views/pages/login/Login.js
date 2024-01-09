@@ -128,7 +128,7 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={() => getAuth(data)}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">
                       Sign In to your account

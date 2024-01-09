@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CCloseButton } from "@coreui/react";
+import { saveAs } from "file-saver";
+
 import "..//allFormCss/From.css";
 
 const ClientList = () => {
@@ -328,6 +330,120 @@ const ClientList = () => {
     }
   }, []);
 
+  const handleSelectAll = () => {
+    if (listData && listData.user && listData.user.length > 0) {
+      if (selectedRows.length === listData.user.length) {
+        // If all rows are currently selected, unselect all
+        setSelectedRows([]);
+      } else {
+        // Otherwise, select all rows
+        setSelectedRows(listData.user.map((user) => user._id));
+      }
+    }
+  };
+
+  // State to keep track of selected rows
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  // Toggle checkbox selection for a row
+  const toggleRowSelection = (ClientId) => {
+    if (selectedRows.includes(ClientId)) {
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((id) => id !== ClientId)
+      );
+    } else {
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, ClientId]);
+    }
+  };
+
+  const convertToCSV = (data) => {
+    // Extract only the first six columns from the header
+    const customHeaders = [
+      "Id",
+      "Client Name",
+      "Country",
+      "Bank Name",
+      "Account Number",
+      "IFSC Code",
+    ];
+
+    // Join the custom headers to form the header line
+    const header = customHeaders.join(",");
+    // console.log(header, "Headerrrrrr");
+
+    const rows = data.map((row) => {
+      const rowData = [
+        row._id,
+        `"${row.clientName}"`,
+        `"${row.country}"`,
+        `"${row.bankName}"`,
+        `"${row.accountNumber}"`,
+        `"${row.ifscCode}"`,
+      ];
+      return rowData.join(",");
+    });
+    // console.log(rows, "rowwwwww");
+
+    return `${header}\n${rows.join("\n")}`;
+  };
+
+  // Function to export data as CSV file
+  const exportToCSV = () => {
+    const selectedData = listData.user.filter((user) =>
+      selectedRows.includes(user._id)
+    );
+    const csvData = convertToCSV(selectedData);
+    // console.log(listData.user);
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+    saveAs(blob, "account_data.csv");
+    setSelectedRows([]);
+  };
+
+  // State for sorting
+  const [sortOrder, setSortOrder] = useState("");
+  const [sortColumn, setSortColumn] = useState(""); // Default sorting column
+
+  const handleSort = (column) => {
+    // Toggle between ascending and descending order
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+    setSortColumn(column);
+  };
+  // Function to compare values for sorting
+  const compareValues = (key, order = "asc") => {
+    return function (a, b) {
+      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+        // Property doesn't exist on either object
+        return 0;
+      }
+
+      const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
+      const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
+
+      // Handle numeric comparison
+      const numericComparison = parseFloat(varB) - parseFloat(varA) || 0;
+
+      // If numericComparison is not 0, return it; otherwise, proceed with string comparison
+      if (numericComparison !== 0) {
+        return order === "asc" ? numericComparison : numericComparison * -1;
+      }
+
+      let comparison = 0;
+      if (varA > varB) {
+        comparison = 1;
+      } else if (varA < varB) {
+        comparison = -1;
+      }
+
+      return order === "desc" ? comparison * -1 : comparison;
+    };
+  };
+
+  // Sort the data based on the current sorting column and order
+  const sortedData = Array.isArray(listData.user)
+    ? [...listData.user].sort(compareValues(sortColumn, sortOrder))
+    : [];
+
   return (
     <>
       <div>
@@ -341,60 +457,126 @@ const ClientList = () => {
               >
                 +
               </button>
+              <button
+                type="button"
+                className="btn btn-primary mx-3"
+                style={{ float: "right", margin: "5px" }}
+                onClick={exportToCSV}
+                disabled={selectedRows.length === 0}
+              >
+                Export to CSV
+              </button>
             </div>
             <table className="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th>Client Name</th>
-                  <th>Country</th>
-                  <th>Bank Name</th>
-                  <th>Account Number</th>
-                  <th>IFSC Code</th>
+                  <th>
+                    <input
+                      type="checkbox"
+                      onChange={handleSelectAll}
+                      checked={
+                        listData &&
+                        listData.user &&
+                        selectedRows.length === listData.user.length &&
+                        listData.user.length > 0
+                      }
+                    />
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("clientName")}
+                  >
+                    Client Name
+                    {sortColumn === "clientName" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("country")}
+                  >
+                    Country
+                    {sortColumn === "country" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("bankName")}
+                  >
+                    Bank Name
+                    {sortColumn === "bankName" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("accountNumber")}
+                  >
+                    Account Number
+                    {sortColumn === "accountNumber" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("ifscCode")}
+                  >
+                    IFSC Code
+                    {sortColumn === "ifscCode" && (
+                      <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
+                    )}
+                  </th>
                   <th>Contract</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {listData &&
-                  listData.user?.map((user) => (
-                    <tr key={user._id}>
-                      <td>{user.clientName}</td>
-                      <td>{user.country}</td>
-                      <td>{user.bankName}</td>
-                      <td>{user.accountNumber}</td>
-
-                      <td>{user.ifscCode}</td>
-                      <td>
-                        <span>
-                          {user.contract && (
-                            <a
-                              href={`http://localhost:9000/${user.contract}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Open Contract
-                            </a>
-                          )}
-                        </span>
-                      </td>
-                      <td>
-                        <>
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => handleEdit(user._id)}
+                {sortedData.map((user) => (
+                  <tr key={user._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        onChange={() => toggleRowSelection(user._id)}
+                        checked={selectedRows.includes(user._id)}
+                      />
+                    </td>
+                    <td>{user.clientName}</td>
+                    <td>{user.country}</td>
+                    <td>{user.bankName}</td>
+                    <td>{user.accountNumber}</td>
+                    <td>{user.ifscCode}</td>
+                    <td>
+                      <span>
+                        {user.contract && (
+                          <a
+                            href={`http://localhost:2000/${user.contract}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            Edit
-                          </button>
-                          <button
-                            className="ms-3 btn btn-danger"
-                            onClick={() => handleDelete(user._id)}
-                          >
-                            Delete
-                          </button>
-                        </>
-                      </td>
-                    </tr>
-                  ))}
+                            Open Contract
+                          </a>
+                        )}
+                      </span>
+                    </td>
+                    <td>
+                      <>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleEdit(user._id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="ms-3 btn btn-danger"
+                          onClick={() => handleDelete(user._id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
