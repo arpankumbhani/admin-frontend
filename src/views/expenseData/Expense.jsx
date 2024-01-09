@@ -713,6 +713,7 @@ const ExpenseList = () => {
                   <th>
                     <input
                       type="checkbox"
+                      className="Checkbox"
                       onChange={handleSelectAll}
                       checked={
                         listData &&
@@ -723,7 +724,7 @@ const ExpenseList = () => {
                     />
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("expenseName")}
                   >
                     Expense Name
@@ -732,7 +733,7 @@ const ExpenseList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("expenseAmount")}
                   >
                     Expense Amount
@@ -741,7 +742,7 @@ const ExpenseList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("paymentDate")}
                   >
                     Payment Date
@@ -750,7 +751,7 @@ const ExpenseList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("paymentMode")}
                   >
                     Payment Mode
@@ -768,6 +769,7 @@ const ExpenseList = () => {
                     <td>
                       <input
                         type="checkbox"
+                        className="Checkbox"
                         onChange={() => toggleRowSelection(user._id)}
                         checked={selectedRows.includes(user._id)}
                       />

@@ -594,6 +594,7 @@ const Income = () => {
                   <th>
                     <input
                       type="checkbox"
+                      className="Checkbox"
                       onChange={handleSelectAll}
                       checked={
                         listData &&
@@ -604,7 +605,7 @@ const Income = () => {
                     />
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("clientName")}
                   >
                     Client Name
@@ -612,17 +613,14 @@ const Income = () => {
                       <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                     )}
                   </th>
-                  <th
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleSort("amount")}
-                  >
+                  <th className="pointer" onClick={() => handleSort("amount")}>
                     Amount
                     {sortColumn === "amount" && (
                       <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("dueAmount")}
                   >
                     Due Amount
@@ -631,7 +629,7 @@ const Income = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("billDate")}
                   >
                     Bill Date
@@ -640,7 +638,7 @@ const Income = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("dueBilDate")}
                   >
                     Due Bill Date
@@ -649,7 +647,7 @@ const Income = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("datePicker")}
                   >
                     Receive Date
@@ -658,7 +656,7 @@ const Income = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("accountName")}
                   >
                     Receive Payment Account
@@ -677,6 +675,7 @@ const Income = () => {
                     <td>
                       <input
                         type="checkbox"
+                        className="Checkbox"
                         onChange={() => toggleRowSelection(user._id)}
                         checked={selectedRows.includes(user._id)}
                       />

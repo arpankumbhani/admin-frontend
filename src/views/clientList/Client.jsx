@@ -473,6 +473,7 @@ const ClientList = () => {
                   <th>
                     <input
                       type="checkbox"
+                      className="Checkbox"
                       onChange={handleSelectAll}
                       checked={
                         listData &&
@@ -483,7 +484,7 @@ const ClientList = () => {
                     />
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("clientName")}
                   >
                     Client Name
@@ -491,17 +492,14 @@ const ClientList = () => {
                       <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                     )}
                   </th>
-                  <th
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleSort("country")}
-                  >
+                  <th className="pointer" onClick={() => handleSort("country")}>
                     Country
                     {sortColumn === "country" && (
                       <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("bankName")}
                   >
                     Bank Name
@@ -510,7 +508,7 @@ const ClientList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("accountNumber")}
                   >
                     Account Number
@@ -519,7 +517,7 @@ const ClientList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("ifscCode")}
                   >
                     IFSC Code
@@ -537,6 +535,7 @@ const ClientList = () => {
                     <td>
                       <input
                         type="checkbox"
+                        className="Checkbox"
                         onChange={() => toggleRowSelection(user._id)}
                         checked={selectedRows.includes(user._id)}
                       />

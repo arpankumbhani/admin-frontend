@@ -441,6 +441,7 @@ const AccountList = () => {
                   <th>
                     <input
                       type="checkbox"
+                      className="Checkbox"
                       onChange={handleSelectAll}
                       checked={
                         listData &&
@@ -451,7 +452,7 @@ const AccountList = () => {
                     />
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("accountName")}
                   >
                     Account Name
@@ -460,7 +461,7 @@ const AccountList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("initialBalance")}
                   >
                     Initial Balance
@@ -469,7 +470,7 @@ const AccountList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("accountNumber")}
                   >
                     Account Number
@@ -478,7 +479,7 @@ const AccountList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("branchCode")}
                   >
                     Branch Code
@@ -487,7 +488,7 @@ const AccountList = () => {
                     )}
                   </th>
                   <th
-                    style={{ cursor: "pointer" }}
+                    className="pointer"
                     onClick={() => handleSort("bankBranch")}
                   >
                     Bank Branch
@@ -507,6 +508,7 @@ const AccountList = () => {
                         type="checkbox"
                         onChange={() => toggleRowSelection(user._id)}
                         checked={selectedRows.includes(user._id)}
+                        className="Checkbox"
                       />
                     </td>
                     <td>{user.accountName}</td>
