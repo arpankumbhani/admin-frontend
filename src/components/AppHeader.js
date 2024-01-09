@@ -61,12 +61,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink
-            // onClick={() => {
-            //   localStorage.removeItem("token");
-            //   navigate("/login");
-            // }}
-            >
+            <CNavLink href="/">
               <CIcon icon={cilEnvelopeOpen} size="lg" />
             </CNavLink>
           </CNavItem>
@@ -77,7 +72,7 @@ const AppHeader = () => {
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>
-        <AppBreadcrumb />{" "}
+        <AppBreadcrumb />
       </CContainer>
     </CHeader>
   );
