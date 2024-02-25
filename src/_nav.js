@@ -8,6 +8,8 @@ import {
   cilSave,
   cilSpeedometer,
   cilWallet,
+  cilDescription,
+  cilInbox,
 } from "@coreui/icons";
 import { CNavItem } from "@coreui/react";
 
@@ -72,7 +74,34 @@ const _nav = [
     component: CNavItem,
     name: "Report",
     to: "/reportData",
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Ledger",
+    to: "/ledgerData",
     icon: <CIcon icon={cilSave} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Product",
+    to: "/productData",
+    icon: <CIcon icon={cilInbox} customClassName="nav-icon" />,
+    badge: {
+      color: "info",
+    },
+  },
+  {
+    component: CNavItem,
+    name: "Customer",
+    to: "/customerData",
+    icon: <CIcon icon={cilInbox} customClassName="nav-icon" />,
     badge: {
       color: "info",
     },

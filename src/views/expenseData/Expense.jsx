@@ -141,7 +141,7 @@ const ExpenseList = () => {
     }));
   };
   const rowHandleChequeInputChange = (e, key) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setEditedData({
       ...editedData,
       rowChequeDetails: {
@@ -775,7 +775,7 @@ const ExpenseList = () => {
                       />
                     </td>
                     <td>{user.expenseName}</td>
-                    <td>{user.expenseAmount}</td>
+                    <td>{parseFloat(user.expenseAmount).toLocaleString()}</td>
                     <td>{user.paymentDate.slice(0, 10)}</td>
                     <td>{user.paymentMode}</td>
                     <td>

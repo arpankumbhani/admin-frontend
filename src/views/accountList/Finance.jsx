@@ -441,6 +441,7 @@ const AccountList = () => {
                   <th>
                     <input
                       type="checkbox"
+                      name="selectAll"
                       className="Checkbox"
                       onChange={handleSelectAll}
                       checked={
@@ -506,13 +507,14 @@ const AccountList = () => {
                     <td>
                       <input
                         type="checkbox"
+                        name="checkbox"
                         onChange={() => toggleRowSelection(user._id)}
                         checked={selectedRows.includes(user._id)}
                         className="Checkbox"
                       />
                     </td>
                     <td>{user.accountName}</td>
-                    <td>{user.initialBalance}</td>
+                    <td>{parseFloat(user.initialBalance).toLocaleString()}</td>
                     <td>{user.accountNumber}</td>
                     <td>{user.branchCode}</td>
                     <td>{user.bankBranch}</td>

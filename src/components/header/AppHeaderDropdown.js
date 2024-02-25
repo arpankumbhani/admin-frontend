@@ -98,7 +98,7 @@ const AppHeaderDropdown = () => {
           }}
         >
           <CIcon icon={cilLockLocked} className="me-2" />
-          Log Out
+          LogOut
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

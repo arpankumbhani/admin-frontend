@@ -266,6 +266,7 @@ const Income = () => {
   //get all data
 
   const [listData, setListData] = useState([]);
+  console.log(listData);
   const [editedData, setEditedData] = useState({});
 
   const getData = useCallback(async () => {
@@ -460,13 +461,13 @@ const Income = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   // Toggle checkbox selection for a row
-  const toggleRowSelection = (ClientId) => {
-    if (selectedRows.includes(ClientId)) {
+  const toggleRowSelection = (IncomeId) => {
+    if (selectedRows.includes(IncomeId)) {
       setSelectedRows((prevSelectedRows) =>
-        prevSelectedRows.filter((id) => id !== ClientId)
+        prevSelectedRows.filter((id) => id !== IncomeId)
       );
     } else {
-      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, ClientId]);
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, IncomeId]);
     }
   };
 
@@ -514,7 +515,7 @@ const Income = () => {
       selectedRows.includes(user._id)
     );
     const csvData = convertToCSV(selectedData);
-    console.log(selectedData);
+    // console.log(selectedData);
     const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
     saveAs(blob, "account_data.csv");
     setSelectedRows([]);
@@ -673,6 +674,7 @@ const Income = () => {
                 {sortedData.map((user) => (
                   <tr key={user._id}>
                     <td>
+                      {/* {console.log(sortedData)} */}
                       <input
                         type="checkbox"
                         className="Checkbox"
@@ -681,8 +683,8 @@ const Income = () => {
                       />
                     </td>
                     <td>{user.clientName}</td>
-                    <td>{user.amount}</td>
-                    <td>{user.dueAmount}</td>
+                    <td>{parseFloat(user.amount).toLocaleString()}</td>
+                    <td>{parseFloat(user.dueAmount).toLocaleString()}</td>
                     <td>{user.billDate && user.billDate.slice(0, 10)}</td>
                     <td>{user.dueBilDate && user.dueBilDate.slice(0, 10)}</td>
                     <td>{user.datePicker && user.datePicker.slice(0, 10)}</td>

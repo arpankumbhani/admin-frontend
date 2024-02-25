@@ -23,12 +23,26 @@
   backdrop-filter: blur(6px);
   background-color: #f6f6f6c8;
 }
+.ledger-style {
+  border-style: outset;
+  margin: 0px 200px;
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(6px);
+  background-color: #f6f6f6c8;
+}
 .totalAmount {
   float: right;
 }
+
 .pointer {
   cursor: pointer;
 }
+
 .Checkbox {
-  transform: scale(1.7); /* Adjust the scale factor as needed */
+  transform: scale(1.7);
+}
+.Img {
+  width: 100px;
+  height: 80px;
 }
